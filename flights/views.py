@@ -206,13 +206,11 @@ def create_flight(request: Request) -> Response:
     if serializer.is_valid():
         flight = serializer.save()
         
-        # Log the API traffic
         response = Response(serializer.data, status=status.HTTP_201_CREATED)
         utils.log_traffic(request, response)
         
         return response
 
-    # Log the API traffic in case of errors
     response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     utils.log_traffic(request, response)
     return response
@@ -262,8 +260,6 @@ class ReservationListView(APIView):
     def get(self, request: Request) -> Response:
         reservations = Reservation.objects.all()
         serializer = ReservationSerializer(reservations, many=True)
-        
-        # Log the API traffic
         response = Response(serializer.data)
         utils.log_traffic(request, response)
 

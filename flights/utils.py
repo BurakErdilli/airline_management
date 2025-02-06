@@ -3,13 +3,11 @@ from datetime import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 
-# Set up loggers
+# Set up logger
 traffic_logger = logging.getLogger('traffic')
 
 def log_traffic(request, response):
-    """
-    Log API traffic including the request method, URL, status code, IP address, and timestamp.
-    """
+
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     traffic_logger.info(
         f"[{timestamp}] Method: {request.method} | URL: {request.build_absolute_uri()} | Status: {response.status_code} | IP: {request.META.get('REMOTE_ADDR', 'Unknown IP')}"

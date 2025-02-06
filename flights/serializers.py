@@ -8,7 +8,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 class FlightSerializer(serializers.ModelSerializer):
-    airplane = serializers.PrimaryKeyRelatedField(queryset=Airplane.objects.all())  # Only the ID is required
+    airplane = serializers.PrimaryKeyRelatedField(queryset=Airplane.objects.all())
 
     class Meta:
         model = Flight
@@ -16,8 +16,7 @@ class FlightSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 class ReservationSerializer(serializers.ModelSerializer):
-    flight = serializers.PrimaryKeyRelatedField(queryset=Flight.objects.all())  # Accepts only an ID
-
+    flight = serializers.PrimaryKeyRelatedField(queryset=Flight.objects.all())
     class Meta:
         model = Reservation
         fields = ['id', 'passenger_name', 'passenger_email', 'reservation_code', 'flight', 'status', 'created_at']

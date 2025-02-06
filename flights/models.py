@@ -25,8 +25,6 @@ class Flight(models.Model):
         return f"{self.flight_number}: {self.departure} -> {self.destination}"
 
 
-
-
 class Reservation(models.Model):
     passenger_name = models.CharField(max_length=100)
     passenger_email = models.EmailField()

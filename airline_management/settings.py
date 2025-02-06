@@ -10,27 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Load environment variables from a .env file
+load_dotenv()
+
+# Base directory path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c4!wc2wz$*iac3=_vnemvxztx2!z&0my7k3!fo8__0yo-o(n_g'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# Security settings
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = True  # WARNING: Set to False in production!
+ALLOWED_HOSTS = []  # Update this for production
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,7 +48,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'airline_management.urls'
+WSGI_APPLICATION = 'airline_management.wsgi.application'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -70,16 +67,40 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'airline_management.wsgi.application'
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-# Load environment variables from a .env file
-load_dotenv()
+# Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
 
-# Base directory path
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Localization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = 'static/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # for testing locally
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email configuration (SendGrid)
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
@@ -89,7 +110,7 @@ EMAIL_HOST_USER = "apikey"  # This must be "apikey"
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")  # Set your sender email
 
-
+# Logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -99,11 +120,6 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': 'traffic.log',
         },
-        'file_changes': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'changes.log',
-        },
     },
     'loggers': {
         'traffic': {
@@ -111,62 +127,5 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'changes': {
-            'handlers': ['file_changes'],
-            'level': 'INFO',
-            'propagate': True,
-        },
     },
 }
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
